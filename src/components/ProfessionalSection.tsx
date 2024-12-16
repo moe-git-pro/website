@@ -41,7 +41,7 @@ const ProfessionalSection: React.FC<ProfessionalSectionProps> = ({ experiences =
                   {experience.responsibilities?.map((responsibility, i) => (
                     <ListItem key={i}>{responsibility}</ListItem>
                   ))}
-                </UnorderedList>
+                </UnorderedList> 
                 <Box marginTop={2}>
                   <Text fontWeight="bold">Technologies:</Text>
                   <Text>{experience.technologies?.join(', ')}</Text>
