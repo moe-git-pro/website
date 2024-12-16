@@ -15,7 +15,7 @@ const root = createRoot(rootElement);
 
 console.log('Rendering application...');
 
-root.render(
+root.render( 
   <StrictMode>
     <ChakraProvider theme={theme}>
       <CSSReset />

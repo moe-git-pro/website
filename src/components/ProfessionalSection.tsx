@@ -1,24 +1,12 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  VStack,
-  HStack,
-  Text,
-  UnorderedList,
-  ListItem,
-  Divider,
-  Flex,
-  Grid,
-  GridItem,
-  Container,
-} from '@chakra-ui/react';
+import { VStack, HStack, Text, UnorderedList, ListItem, Divider, Flex, Grid, GridItem, Container } from '@chakra-ui/react';
 import { Experience } from './types'; // Adjust the import path based on your file structure
 
 interface ProfessionalSectionProps {
   experiences?: Experience[];
 }
 
-const ProfessionalSection: React.FC<ProfessionalSectionProps> = ({ experiences = [] }) => {
+const ProfessionalSection: React.FC<ProfessionalSectionProps> = ({ experiences = [] }: ProfessionalSectionProps) => {
   console.log('Experiences passed to ProfessionalSection:', experiences);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 

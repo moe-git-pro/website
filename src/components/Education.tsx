@@ -1,11 +1,21 @@
 import React, { useState } from 'react';
-import { Box, VStack, HStack, Icon, Heading, Text, Flex, UnorderedList, ListItem, Grid, GridItem, Container, Input, Textarea, Button, Center } from '@chakra-ui/react';
+import { Box, VStack, Icon, Heading, Text, Flex, UnorderedList, ListItem, Container } from '@chakra-ui/react';
 import { FaGraduationCap } from 'react-icons/fa';
 
-const EducationCard = ({ institution, degree, year, details, index, selectedIndex, toggleDetails }) => {
+interface EducationCardProps {
+  institution: string;
+  degree: string;
+  year: string;
+  details: string[];
+  index: number;
+  selectedIndex: number;
+  toggleDetails: (index: number) => void;
+}
+
+const EducationCard: React.FC<EducationCardProps> = ({ institution, degree, year, details, index, selectedIndex, toggleDetails }) => {
   return (
     <Box
-    maxWidth="1250px"
+      maxWidth="1250px"
       borderWidth="1px"
       borderRadius="xl"
       boxShadow="md"
@@ -23,15 +33,13 @@ const EducationCard = ({ institution, degree, year, details, index, selectedInde
       }}
     >
       <Flex padding={4} alignItems="center" cursor="pointer" onClick={() => toggleDetails(index)} flexDirection="column">
-        <HStack align="start" spacing={4} flex={1}>
-          <Icon as={FaGraduationCap} color="blue.500" boxSize={10} opacity={0.7} marginRight={4} />
-          <VStack align="start" spacing={1} flex={1}>
-            <Heading size="md">{degree}</Heading>
-            <Text fontSize="sm" color="gray.600">
-              {institution} | {year}
-            </Text>
-          </VStack>
-        </HStack>
+        <Icon as={FaGraduationCap} color="blue.500" boxSize={10} opacity={0.7} marginRight={4} />
+        <VStack align="start" spacing={1} flex={1}>
+          <Heading size="md">{degree}</Heading>
+          <Text fontSize="sm" color="gray.600">
+            {institution} | {year}
+          </Text>
+        </VStack>
       </Flex>
       {selectedIndex === index && (
         <Box padding={4} borderTopWidth="1px" borderTopColor="gray.200" backgroundColor="gray.50">
@@ -86,9 +94,8 @@ const Education: React.FC = () => {
     },
   ];
 
-
   return (
-    <VStack spacing={8} align="center" pt={8} >
+    <VStack spacing={8} align="center" pt={8}>
       <Heading textAlign="center" fontSize={['2xl', '3xl', '4xl']} mb={12}>
         Education
       </Heading>
@@ -96,11 +103,11 @@ const Education: React.FC = () => {
         <Flex direction="column" gap={6}>
           {educationItems.map((item, index) => (
             <Box key={item.institution} width="100%" paddingBottom={4}>
-              <EducationCard 
-                institution={item.institution} 
-                degree={item.degree} 
-                year={item.year} 
-                details={item.details} 
+              <EducationCard
+                institution={item.institution}
+                degree={item.degree}
+                year={item.year}
+                details={item.details}
                 index={index}
                 selectedIndex={selectedIndex}
                 toggleDetails={toggleDetails}

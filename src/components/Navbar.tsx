@@ -93,7 +93,7 @@ export const Navbar: React.FC = () => {
   const isMobile = useBreakpointValue({ base: true, md: false });
   const navbarRef = useRef<HTMLDivElement>(null);
 
-  const handleLinkClick = () => {
+  const handleLinkClick = (href: string) => {
     if (isMobile) {
       onClose(); // Close the navbar on mobile when a link is clicked
     }
@@ -217,7 +217,7 @@ export const Navbar: React.FC = () => {
             display={{ base: 'none', md: 'flex' }}
           >
             {Links.map((link) => (
-              <NavLink key={link.name} href={link.href} onClick={handleLinkClick}>
+              <NavLink key={link.name} href={link.href} onClick={() => handleLinkClick(link.href)}>
                 {link.name}
               </NavLink>
             ))}
@@ -291,7 +291,7 @@ export const Navbar: React.FC = () => {
           >
             <VStack spacing={4} align="stretch" px={4}>
               {Links.map((link) => (
-                <NavLink key={link.name} href={link.href} onClick={handleLinkClick}>
+                <NavLink key={link.name} href={link.href} onClick={() => handleLinkClick(link.href)}>
                   {link.name}
                 </NavLink>
               ))}

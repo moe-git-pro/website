@@ -9,14 +9,11 @@ import {
   Flex, 
   useColorModeValue,
   Badge,
-  Divider,
   chakra,
-  Grid,
-  GridItem,
-  useBreakpointValue,
   Image,
   Tooltip,
-  Container
+  Container,
+  useBreakpointValue
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { 
@@ -178,7 +175,9 @@ const getTechnologyIcon = (technology: string) => {
   return FaCircle;
 };
 
-export const Resume: React.FC = () => {
+interface ResumeProps {}
+
+export const Resume: React.FC<ResumeProps> = () => {
   const [activeExperience, setActiveExperience] = useState<number | null>(null);
   
   const isMobile = useBreakpointValue({ base: true, md: false });
