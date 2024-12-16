@@ -113,9 +113,8 @@ const parseRSSFeed = async (xmlString: string): Promise<MediumArticle[]> => {
   });
 };
 
-const MEDIUM_FEED_URL = `https://medium.com/feed/@moetezafif`
 
-export const useMediumArticles = (username: string) => {
+export const useMediumArticles = () => {
   const [articles, setArticles] = useState<MediumArticle[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

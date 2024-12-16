@@ -109,7 +109,7 @@ const Education: React.FC = () => {
                 year={item.year}
                 details={item.details}
                 index={index}
-                selectedIndex={selectedIndex}
+                selectedIndex={selectedIndex ?? 0}
                 toggleDetails={toggleDetails}
               />
             </Box>

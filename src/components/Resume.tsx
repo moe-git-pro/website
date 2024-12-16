@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
   Box, 
   VStack, 
@@ -9,23 +9,14 @@ import {
   Flex, 
   useColorModeValue,
   Badge,
-  chakra,
-  Image,
-  Tooltip,
+  
   Container,
   useBreakpointValue
 } from '@chakra-ui/react';
-import { motion } from 'framer-motion';
 import { 
   FaBriefcase, 
   FaMapMarkerAlt,
   FaCode,
-  FaRocket,
-  FaAward,
-  FaGraduationCap,
-  FaCircle,
-  FaExclamationTriangle,
-  FaQuestionCircle
 } from 'react-icons/fa';
 import { 
   SiKubernetes, 
@@ -47,7 +38,6 @@ import {
 } from 'react-icons/si';
 
 // Create a motion-enabled Chakra component
-const MotionBox = chakra(motion.div);
 
 interface Experience {
   title: string;
@@ -172,7 +162,7 @@ const getTechnologyIcon = (technology: string) => {
   }
   
   // Return white circle if no match
-  return FaCircle;
+  return FaMapMarkerAlt;
 };
 
 interface ResumeProps {}
@@ -268,7 +258,7 @@ export const Resume: React.FC<ResumeProps> = () => {
                     zIndex={2}
                   >
                     <Icon 
-                      as={FaCircle} 
+                      as={FaMapMarkerAlt} 
                       color={exp.color} 
                       boxSize={6} 
                       opacity={0.7}
@@ -281,20 +271,15 @@ export const Resume: React.FC<ResumeProps> = () => {
                   </Box>
                 )}
 
-                <MotionBox
+                <Box
                   width={["full", "calc(50% - 75px)"]}
-                  initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                  animate={{ opacity: 1, x: 0 }}
                   transition={{
-                    duration: 0.6, 
-                    delay: index * 0.2,
+                    duration: '0.6s', 
+                    delay: `${index * 0.2}s`,
                     type: 'spring',
-                    stiffness: 80
+                    stiffness: 'medium'
                   }}
-                  whileHover={{ 
-                    scale: 1.03,
-                    transition: { duration: 0.3 }
-                  }}
+        
                 >
                   <Box
                     borderWidth="1px"
@@ -357,11 +342,8 @@ export const Resume: React.FC<ResumeProps> = () => {
                         borderTopWidth="1px"
                         borderTopColor={colors.borderColor}
                         bg={colors.detailsBgColor}
-                        animate={{ 
-                          opacity: [0, 1],
-                          y: [10, 0]
-                        }}
-                        transition={{ duration: 0.3 }}
+
+                        transition={{ duration: '0.3s' }}
                       >
                         <VStack align="stretch" spacing={3}>
                           {exp.responsibilities.map((responsibility, respIndex) => (
@@ -428,7 +410,7 @@ export const Resume: React.FC<ResumeProps> = () => {
                       </Box>
                     )}
                   </Box>
-                </MotionBox>
+                </Box>
               </Flex>
             ))}
           </Box>      </VStack>

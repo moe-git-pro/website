@@ -6,7 +6,6 @@ import {
   Link,
   IconButton,
   useDisclosure,
-  Stack,
   Heading,
   useColorModeValue,
   Button,
@@ -14,7 +13,6 @@ import {
   useColorMode,
   VStack,
   Slide,
-  SlideFade,
   useBreakpointValue
 } from '@chakra-ui/react';
 import { 
@@ -22,69 +20,24 @@ import {
   CloseIcon, 
   MoonIcon, 
   SunIcon,
-  DownloadIcon 
 } from '@chakra-ui/icons';
 import { 
   FaGithub, 
   FaLinkedin, 
-  FaTwitter 
 } from 'react-icons/fa';
-import { motion, useAnimation } from 'framer-motion';
 
 interface NavLinkProps {
   children: React.ReactNode;
   href: string;
 }
 
-const MotionBox = motion(Box);
-
-const NavLink: React.FC<NavLinkProps> = ({ children, href }) => {
-  const controls = useAnimation();
-
-  const handleHoverStart = () => {
-    controls.start({
-      width: '100%',
-      transition: { duration: 0.3 }
-    });
-  };
-
-  const handleHoverEnd = () => {
-    controls.start({
-      width: '0%',
-      transition: { duration: 0.3 }
-    });
-  };
-
+const CustomNavLink = React.forwardRef<HTMLAnchorElement, NavLinkProps>(({ children, href }, ref) => {
   return (
-    <Link
-      px={3}
-      py={2}
-      rounded={'md'}
-      fontWeight="medium"
-      position="relative"
-      href={href}
-      scrollBehavior={'smooth'}
-      color={useColorModeValue('gray.800', 'white')}
-      onMouseEnter={handleHoverStart}
-      onMouseLeave={handleHoverEnd}
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      overflow="hidden"
-    >
+    <Link ref={ref} href={href} _hover={{ textDecoration: 'none' }}>
       {children}
-      <MotionBox
-        position="absolute"
-        bottom="0"
-        left="0"
-        height="2px"
-        bg={useColorModeValue('blue.500', 'blue.300')}
-        initial={{ width: '0%' }}
-        animate={controls}
-      />
     </Link>
   );
-};
+});
 
 export const Navbar: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -93,11 +46,7 @@ export const Navbar: React.FC = () => {
   const isMobile = useBreakpointValue({ base: true, md: false });
   const navbarRef = useRef<HTMLDivElement>(null);
 
-  const handleLinkClick = (href: string) => {
-    if (isMobile) {
-      onClose(); // Close the navbar on mobile when a link is clicked
-    }
-  };
+
 
   const handleClickOutside = (event: MouseEvent) => {
     if (navbarRef.current && !navbarRef.current.contains(event.target as Node)) {
@@ -125,7 +74,7 @@ export const Navbar: React.FC = () => {
   const Links = [
     { name: 'Home', href: '#home' },
     { name: 'About', href: '#about' },
-    { name: 'Skills', href: '#technical-stacks' },
+    { name: 'Skills', href: '#tech-stacks' },
     { name: 'Projects', href: '#projects' },
     { name: 'Contact', href: '#contact' },
   ];
@@ -145,7 +94,7 @@ export const Navbar: React.FC = () => {
   );
 
   return (
-    <MotionBox
+    <Box
       as="nav"
       position="fixed"
       width="full"
@@ -161,17 +110,7 @@ export const Navbar: React.FC = () => {
           ) 
         : 'none'
       }
-      initial={{ opacity: 0, y: -50 }}
-      animate={{ 
-        opacity: 1, 
-        y: 0,
-        transition: { 
-          type: "spring", 
-          stiffness: 100, 
-          damping: 10 
-        } 
-      }}
-    >
+  >
       <Flex 
         h={16} 
         alignItems={'center'} 
@@ -193,9 +132,7 @@ export const Navbar: React.FC = () => {
         
         {/* Logo and Navigation */}
         <HStack spacing={8} alignItems={'center'} width="full" justifyContent="space-between">
-          <MotionBox
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
+          <Box
           >
             <Heading 
               size="md" 
@@ -208,7 +145,7 @@ export const Navbar: React.FC = () => {
             >
               Moetez
             </Heading>
-          </MotionBox>
+          </Box>
           
           {/* Desktop Navigation */}
           <HStack
@@ -216,11 +153,11 @@ export const Navbar: React.FC = () => {
             spacing={4}
             display={{ base: 'none', md: 'flex' }}
           >
-            {Links.map((link) => (
-              <NavLink key={link.name} href={link.href} onClick={() => handleLinkClick(link.href)}>
-                {link.name}
-              </NavLink>
-            ))}
+  {Links.map((link) => (
+    <CustomNavLink key={link.name} href={link.href}>
+      {link.name}
+    </CustomNavLink>
+  ))}
           </HStack>
           
           {/* Right Side Actions */}
@@ -228,10 +165,9 @@ export const Navbar: React.FC = () => {
             {/* Social Links */}
             <HStack spacing={2} display={{ base: 'none', md: 'flex' }}>
               {SocialLinks.map((social) => (
-                <MotionBox
+                <Box
                   key={social.label}
-                  whileHover={{ scale: 1.2, rotate: 360 }}
-                  whileTap={{ scale: 0.9 }}
+       
                 >
                   <Tooltip label={social.label} hasArrow>
                     <Link 
@@ -247,14 +183,13 @@ export const Navbar: React.FC = () => {
                       <social.icon size={20} />
                     </Link>
                   </Tooltip>
-                </MotionBox>
+                </Box>
               ))}
             </HStack>
 
             {/* Color Mode Toggle */}
-            <MotionBox
-              whileHover={{ rotate: 180 }}
-              whileTap={{ scale: 0.9 }}
+            <Box
+        
             >
               <Tooltip label={`Switch to ${colorMode === 'light' ? 'Dark' : 'Light'} Mode`} hasArrow>
                 <IconButton
@@ -264,16 +199,18 @@ export const Navbar: React.FC = () => {
                   icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
                 />
               </Tooltip>
-            </MotionBox>
+            </Box>
 
             {/* Resume Download Button */}
             <Link href="/assets/resume.pdf" download>
-              <Button type="button" className="chakra-button css-15mq004">
-                <span className="chakra-button__icon css-1wh2kri">
-                  <svg viewBox="0 0 14 14" focusable="false" className="chakra-icon css-onkibi" aria-hidden="true">
+              <Button 
+                type="button" 
+                leftIcon={
+                  <svg viewBox="0 0 14 14" focusable="false" aria-hidden="true">
                     <path fill="currentColor" d="M11.2857,6.05714 L10.08571,4.85714 L7.85714,7.14786 L7.85714,1 L6.14286,1 L6.14286,7.14786 L3.91429,4.85714 L2.71429,6.05714 L7,10.42857 L11.2857,6.05714 Z M1,11.2857 L1,13 L13,13 L13,11.2857 L1,11.2857 Z"></path>
                   </svg>
-                </span>
+                }
+              >
                 Resume
               </Button>
             </Link>
@@ -291,9 +228,9 @@ export const Navbar: React.FC = () => {
           >
             <VStack spacing={4} align="stretch" px={4}>
               {Links.map((link) => (
-                <NavLink key={link.name} href={link.href} onClick={() => handleLinkClick(link.href)}>
+                <CustomNavLink key={link.name} href={link.href}>
                   {link.name}
-                </NavLink>
+                </CustomNavLink>
               ))}
               
               {/* Mobile Social Links */}
@@ -313,7 +250,7 @@ export const Navbar: React.FC = () => {
           </Box>
         </Slide>
       )}
-    </MotionBox>
+    </Box>
   );
 };
 

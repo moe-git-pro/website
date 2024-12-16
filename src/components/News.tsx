@@ -1,4 +1,3 @@
-import React from 'react';
 import { 
   Box, 
   Flex, 
@@ -9,7 +8,7 @@ import {
   Text, 
   useColorModeValue,
   Link,
-  VStack
+  
 } from '@chakra-ui/react';
 import { useMediumArticles } from '../hooks/useMediumArticles';
 
@@ -148,7 +147,7 @@ const NewsCard = ({
 };
 
 export const News = () => {
-  const { articles, loading, error } = useMediumArticles(import.meta.env.VITE_MEDIUM_USERNAME || 'moetezafif');
+  const { articles, loading, error } = useMediumArticles();
 
   const bgColor = useColorModeValue('white', 'gray.900');
   const headingColor = useColorModeValue('gray.700', 'white');

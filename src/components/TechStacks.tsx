@@ -1,143 +1,20 @@
-import React, { useState, useRef, forwardRef, useMemo, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   Box, 
   Heading, 
   VStack, 
-  HStack,
-  Button,
-  useBreakpointValue,
-  Tooltip,
+  
   IconButton,
-  Container,
-  Flex,
+ 
   Text,
   Icon,
   useColorModeValue,
   Image as ChakraImage,
-  ImageProps,
-  Wrap,
-  WrapItem,
-  useColorMode,
-  Tag,
-  TagLabel,
+ 
+  
   Grid,
-  Circle
 } from '@chakra-ui/react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaQuestionCircle, FaChevronLeft, FaChevronRight, FaCode, FaDatabase, FaShieldAlt, FaCloud, FaTerminal, FaChartLine } from 'react-icons/fa';
-import { SiPrometheus, SiGrafana, SiElasticsearch, SiLogstash, SiFluentd } from 'react-icons/si';
-
-const TechCard: React.FC<{
-  name: string, 
-  logoSrc?: string, 
-  description: string, 
-  category: string
-}> = ({ name, logoSrc, description, category }) => {
-  const { colorMode } = useColorMode();
-  const bgColor = useColorModeValue(
-    'white', 
-    'gray.900'
-  );
-  const cardBgColor = useColorModeValue(
-    'gray.100', 
-    'gray.700'
-  );
-  const iconColor = useColorModeValue('blue.600', 'blue.200');
-  const textColor = useColorModeValue('gray.700', 'gray.200');
-
-  const categoryIcons = {
-    'Cloud & Infrastructure Orchestration': FaCode,
-    'Security & Compliance': FaShieldAlt,
-    'Database & Storage': FaDatabase
-  };
-
-  const CategoryIcon = categoryIcons[category as keyof typeof categoryIcons] || FaCode;
-
-  return (
-    <motion.div
-
-      whileHover={{ 
-        scale: 1.05, 
-        rotate: 2,
-        transition: { duration: 0.2 } 
-      }}
-      whileTap={{ scale: 0.95 }}
-    >
-      <Box
-        bg={cardBgColor}
-        borderRadius="lg"
-        p={[2, 3, 4]}
-        boxShadow="md"
-        border="1px"
-        borderColor={useColorModeValue('gray.200', 'gray.700')}
-        textAlign="center"
-        height="100%"
-        position="relative"
-        overflow="hidden"
-        transition="all 0.3s ease"
-        _hover={{
-          transform: 'translateY(-5px)',
-          boxShadow: 'lg',
-          borderColor: useColorModeValue('gray.300', 'gray.600')
-        }}
-      >
-        {/* Category Icon */}
-        <Box 
-          position="absolute" 
-          top={2} 
-          right={2} 
-          color={iconColor}
-          opacity={0.5}
-        >
-          <CategoryIcon size={20} />
-        </Box>
-
-        {/* Technology Logo */}
-        <Box 
-          display="flex" 
-          justifyContent="center" 
-          alignItems="center" 
-          mb={3} 
-          height={[50, 70, 90]}
-        >
-          {logoSrc ? (
-            <ChakraImage 
-              src={logoSrc} 
-              alt={`${name} logo`} 
-              maxHeight={[50, 70, 90]} 
-              maxWidth={[50, 70, 90]} 
-              objectFit="contain"
-            />
-          ) : (
-            <Icon 
-              as={CategoryIcon} 
-              boxSize={[8, 10, 12]} 
-              color={iconColor} 
-            />
-          )}
-        </Box>
-
-        {/* Technology Details */}
-        <VStack spacing={1}>
-          <Text 
-            fontWeight="bold" 
-            fontSize={['sm', 'md']} 
-            mb={1}
-          >
-            {name}
-          </Text>
-          <Text 
-            fontSize={['xs', 'sm']} 
-            color={textColor} 
-            noOfLines={2}
-          >
-            {description}
-          </Text>
-        </VStack>
-      </Box>
-    </motion.div>
-  );
-};
+import { FaChevronLeft, FaChevronRight, FaCode, FaDatabase, FaShieldAlt, FaCloud, FaTerminal, FaChartLine } from 'react-icons/fa';
 
 const technologies = [
   {
@@ -447,19 +324,14 @@ export const TechStacks: React.FC = () => {
   }, []);
 
   const bgColor = useColorModeValue('white', 'gray.900');
-  const cardBgColor = useColorModeValue('white', 'gray.800');
   const iconColor = useColorModeValue('blue.600', 'blue.200');
   const textColor = useColorModeValue('gray.700', 'gray.200');
-  const headingColor = useColorModeValue('blue.700', 'blue.300');
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
-  const shadowColor = useColorModeValue('rgba(0,0,0,0.1)', 'rgba(255,255,255,0.1)');
-  const hoverBgColor = useColorModeValue('gray.50', 'gray.700');
 
   const sliderRef = useRef<HTMLDivElement>(null);
 
   return (
     <Box 
-      id="technical-stacks"
+      id="tech-stacks"
       bg={bgColor}
       py={16}
       px={[4, 8, 16]}
