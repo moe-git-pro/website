@@ -1,122 +1,178 @@
 import React, { useState } from 'react';
-import { Box, VStack, Icon, Heading, Text, Flex, UnorderedList, ListItem, Container } from '@chakra-ui/react';
-import { FaGraduationCap } from 'react-icons/fa';
+import {
+  Box,
+  VStack,
+  Icon,
+  Heading,
+  Text,
+  Flex,
+  Container,
+  useColorModeValue,
+  Badge,
+  HStack,
+  Circle,
+  Collapse,
+  Button,
+  chakra,
+  shouldForwardProp
+} from '@chakra-ui/react';
+import { motion, isValidMotionProp } from 'framer-motion';
+import { FaGraduationCap, FaChevronDown, FaChevronUp, FaCalendarAlt } from 'react-icons/fa';
 
-interface EducationCardProps {
+const MotionBox = chakra(motion.div, {
+  shouldForwardProp: (prop) => isValidMotionProp(prop) || shouldForwardProp(prop),
+});
+
+const EducationCard = ({
+  institution,
+  degree,
+  year,
+  details,
+  index,
+  isExpanded,
+  onToggle
+}: {
   institution: string;
   degree: string;
   year: string;
   details: string[];
   index: number;
-  selectedIndex: number;
-  toggleDetails: (index: number) => void;
-}
+  isExpanded: boolean;
+  onToggle: () => void;
+}) => {
+  const cardBg = useColorModeValue('light.card', 'dark.card');
+  const textColor = useColorModeValue('light.text', 'dark.text');
+  const mutedColor = useColorModeValue('light.muted', 'dark.muted');
+  const accentColor = useColorModeValue('brand.500', 'brand.400');
+  const borderColor = useColorModeValue('light.border', 'dark.border');
 
-const EducationCard: React.FC<EducationCardProps> = ({ institution, degree, year, details, index, selectedIndex, toggleDetails }) => {
   return (
-    <Box
-      maxWidth="1250px"
-      borderWidth="1px"
-      borderRadius="xl"
-      boxShadow="md"
-      backgroundColor="white"
-      borderColor="gray.200"
-      alignContent="center"
-      justifyContent="center"
+    <MotionBox
+      initial={{ opacity: 0, x: -20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: index * 0.1 } as any}
+      bg={cardBg}
+      borderRadius="3xl"
+      border="1px solid"
+      borderColor={isExpanded ? accentColor : borderColor}
       overflow="hidden"
-      transition="all 0.3s ease"
-      transform={selectedIndex === index ? 'scale(1.05)' : 'scale(1)'}
-      zIndex={selectedIndex === index ? 1 : 0}
-      _hover={{
-        transform: 'scale(1.01)',
-        boxShadow: 'xl',
-      }}
+      p={8}
+      position="relative"
+      whileHover={{ shadow: 'lg' } as any}
     >
-      <Flex padding={4} alignItems="center" cursor="pointer" onClick={() => toggleDetails(index)} flexDirection="column">
-        <Icon as={FaGraduationCap} color="blue.500" boxSize={10} opacity={0.7} marginRight={4} />
-        <VStack align="start" spacing={1} flex={1}>
-          <Heading size="md">{degree}</Heading>
-          <Text fontSize="sm" color="gray.600">
-            {institution} | {year}
-          </Text>
+      <Flex direction={{ base: 'column', md: 'row' }} align="start" gap={6}>
+        <Circle size="60px" bg={useColorModeValue('brand.50', 'whiteAlpha.100')} color={accentColor}>
+          <Icon as={FaGraduationCap} w={6} h={6} />
+        </Circle>
+
+        <VStack align="start" spacing={4} flex={1}>
+          <VStack align="start" spacing={1}>
+            <Heading size="md" color={textColor} fontWeight="800">
+              {degree}
+            </Heading>
+            <HStack spacing={4} wrap="wrap">
+              <HStack spacing={1} color={accentColor}>
+                <Text fontWeight="700" fontSize="sm">{institution}</Text>
+              </HStack>
+              <HStack spacing={1} color={mutedColor} fontSize="xs">
+                <Icon as={FaCalendarAlt} />
+                <Text fontWeight="600">{year}</Text>
+              </HStack>
+            </HStack>
+          </VStack>
+
+          <Collapse in={isExpanded} animateOpacity>
+            <VStack align="start" spacing={2} pt={2}>
+              {details.map((detail, idx) => (
+                <HStack key={idx} align="start" spacing={3}>
+                  <Box mt={2} w={1.5} h={1.5} borderRadius="full" bg={accentColor} flexShrink={0} />
+                  <Text fontSize="sm" color={mutedColor} lineHeight="tall">
+                    {detail}
+                  </Text>
+                </HStack>
+              ))}
+            </VStack>
+          </Collapse>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onToggle}
+            rightIcon={isExpanded ? <FaChevronUp /> : <FaChevronDown />}
+            fontSize="xs"
+            color={accentColor}
+            p={0}
+            _hover={{ bg: 'transparent', opacity: 0.8 }}
+          >
+            {isExpanded ? 'Hide Details' : 'View Focus Areas'}
+          </Button>
         </VStack>
       </Flex>
-      {selectedIndex === index && (
-        <Box padding={4} borderTopWidth="1px" borderTopColor="gray.200" backgroundColor="gray.50">
-          <UnorderedList spacing={1} fontSize="sm" color="gray.700">
-            {details.map((detail, index) => (
-              <ListItem key={index}>
-                • {detail}
-              </ListItem>
-            ))}
-          </UnorderedList>
-        </Box>
-      )}
-    </Box>
+    </MotionBox>
   );
 };
 
 const Education: React.FC = () => {
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-
-  const toggleDetails = (index: number) => {
-    if (selectedIndex === index) {
-      setSelectedIndex(null);
-    } else {
-      setSelectedIndex(index);
-    }
-  };
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
 
   const educationItems = [
     {
-      institution: 'Higher School of Communication of Tunis',
-      degree: 'ICT Engineering Diploma & Telecommunication',
+      institution: 'Higher School of Communication of Tunis (SUP\'COM)',
+      degree: 'ICT Engineering Diploma',
       year: '2021 - 2024',
       details: [
-        'Information and Communication Technology Engineering program focusing on:',
-        'Network infrastructure',
-        'Cybersecurity',
-        'Cloud computing',
-        'Software engineering',
-        'Database management',
-        'Data science',
-        'Artificial intelligence',
-        'Radio systems and signals',
+        'Specialized in Cybersecurity and Network infrastructure.',
+        'Core curriculum in Cloud computing and Software engineering.',
+        'In-depth study of Database management and Data science.',
+        'Focused on Artificial intelligence and Radio systems.',
       ],
     },
     {
       institution: 'Monastir Preparatory Engineering Institute',
-      degree: 'Preparatory Cycle',
+      degree: 'Preparatory Cycle (Math-Physics)',
       year: '2019 - 2021',
       details: [
-        'Studied the basics of mathematics and physics, achieving a rank of 19/900 in the national engineering school entrance exam.',
+        'Intensive study of advanced mathematics and physics.',
+        'Achieved rank 19/900 in the National Engineering School Entrance Exam.',
       ],
     },
   ];
 
+  const bgColor = useColorModeValue('light.bg', 'dark.bg');
+  const mutedColor = useColorModeValue('light.muted', 'dark.muted');
+
   return (
-    <VStack spacing={8} align="center" pt={8}>
-      <Heading textAlign="center" fontSize={['2xl', '3xl', '4xl']} mb={12}>
-        Education
-      </Heading>
-      <Container maxW="1250px" px={{ base: 4, md: 8 }}>
-        <Flex direction="column" gap={6}>
-          {educationItems.map((item, index) => (
-            <Box key={item.institution} width="100%" paddingBottom={4}>
+    <Box as="section" id="education" py={24} bg={bgColor}>
+      <Container maxW="container.lg">
+        <VStack spacing={16} align="stretch">
+          <VStack spacing={4} textAlign="center">
+            <Badge colorScheme="brand" variant="subtle" px={4} py={1} borderRadius="full">
+              Academic
+            </Badge>
+            <Heading fontSize={{ base: '3xl', md: '4xl' }} fontWeight="800">
+              Educational Journey
+            </Heading>
+            <Text color={mutedColor} fontSize="lg" maxW="2xl">
+              Foundational knowledge and specialized engineering training from
+              leading technical institutions.
+            </Text>
+          </VStack>
+
+          <VStack spacing={6} align="stretch">
+            {educationItems.map((item, index) => (
               <EducationCard
-                institution={item.institution}
-                degree={item.degree}
-                year={item.year}
-                details={item.details}
+                key={index}
+                {...item}
                 index={index}
-                selectedIndex={selectedIndex ?? 0}
-                toggleDetails={toggleDetails}
+                isExpanded={expandedIndex === index}
+                onToggle={() => setExpandedIndex(expandedIndex === index ? null : index)}
               />
-            </Box>
-          ))}
-        </Flex>
+            ))}
+          </VStack>
+        </VStack>
       </Container>
-    </VStack>
+    </Box>
   );
 };
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {
   Box,
   Container,
@@ -7,119 +7,102 @@ import {
   VStack,
   Icon,
   SimpleGrid,
-  useColorModeValue
+  useColorModeValue,
+  Badge,
+  Flex,
+  chakra,
+  shouldForwardProp
 } from '@chakra-ui/react';
-import { 
-  FaCode, 
-  FaShieldAlt, 
-  FaNetworkWired, 
-  FaCloud 
+import { motion, isValidMotionProp } from 'framer-motion';
+import {
+  FaCode,
+  FaShieldAlt,
+  FaNetworkWired,
+  FaCloud
 } from 'react-icons/fa';
 
+const MotionBox = chakra(motion.div, {
+  shouldForwardProp: (prop) => isValidMotionProp(prop) || shouldForwardProp(prop),
+});
+
 const AboutSection: React.FC = () => {
-  const cardBg = useColorModeValue('white', 'gray.800');
-  const cardShadow = useColorModeValue(
-    '0 4px 6px rgba(0, 0, 0, 0.1)', 
-    '0 4px 6px rgba(255, 255, 255, 0.05)'
-  );
-  const textColor = useColorModeValue('gray.600', 'gray.300');
-  const headingColor = useColorModeValue('gray.700', 'white');
-  const iconColor = useColorModeValue('blue.500', 'blue.300');
-  const bgColor = useColorModeValue('white', 'gray.900');
-  const cardBorderColor = useColorModeValue('gray.200', 'gray.700');
+  const cardBg = useColorModeValue('light.card', 'dark.card');
+  const textColor = useColorModeValue('light.text', 'dark.text');
+  const mutedColor = useColorModeValue('light.muted', 'dark.muted');
+  const accentColor = useColorModeValue('brand.500', 'brand.400');
+  const borderColor = useColorModeValue('light.border', 'dark.border');
 
   const AboutCards = [
     {
-      icon: FaCode,
-      title: 'Software Development',
-      description: 'Proficient in creating robust, scalable applications using modern technologies and best practices.'
-    },
-    {
       icon: FaShieldAlt,
       title: 'Cybersecurity',
-      description: 'Specialized in implementing comprehensive security measures and threat mitigation strategies.'
+      description: 'Implementing robust security measures and incident response strategies to protect digital assets.'
     },
     {
       icon: FaNetworkWired,
       title: 'DevSecOps',
-      description: 'Integrating security practices throughout the software development lifecycle.'
+      description: 'Shifting security left by integrating automated controls into CI/CD pipelines and infrastructure.'
     },
     {
       icon: FaCloud,
-      title: 'Cloud Infrastructure',
-      description: 'Expertise in designing and managing secure, efficient cloud-based solutions.'
+      title: 'Cloud Security',
+      description: 'Designing secure, resilient cloud architectures leveraging AWS, OVH, and modern networking.'
+    },
+    {
+      icon: FaCode,
+      title: 'Secure Coding',
+      description: 'Building scalable applications with a security-first mindset and automated vulnerability analysis.'
     }
   ];
 
   return (
-    <Box 
-      as="section" 
-      id="about" 
-      py={20} 
-      bg={bgColor}
-    >
-      <Container maxW="1250px">
-        <VStack spacing={12} align="stretch">
-          <VStack textAlign="center" spacing={4}>
-            <Heading 
-              as="h2" 
-              size="2xl" 
-              color={headingColor}
-            >
-              About Me
-            </Heading>
-            <Text 
-              fontSize="xl" 
-              color={textColor} 
-              maxW="800px"
-            >
-              A dedicated Cybersecurity and DevSecOps Engineer with a passion for building secure, innovative technological solutions. 
-              My approach combines technical expertise with a strategic mindset to enhance digital infrastructures and promote 
-              robust software development practices.
-            </Text>
-          </VStack>
+    <Box as="section" id="about" py={32} bg={useColorModeValue('light.bg', 'dark.bg')}>
+      <Container maxW="container.xl">
+        <VStack spacing={20} align="stretch">
+          <Flex direction={{ base: 'column', lg: 'row' }} gap={12} align="center">
+            <VStack align={{ base: 'center', lg: 'start' }} flex={1} spacing={6}>
+              <Badge colorScheme="brand" variant="subtle" px={4} py={1} borderRadius="full">
+                Background
+              </Badge>
+              <Heading fontSize={{ base: '3xl', md: '5xl' }} fontWeight="800" textAlign={{ base: 'center', lg: 'start' }}>
+                Bridging Security and <Text as="span" color={accentColor}>Innovation</Text>.
+              </Heading>
+              <Text fontSize="lg" color={mutedColor} textAlign={{ base: 'center', lg: 'start' }} lineHeight="tall">
+                I am a Cybersecurity and DevSecOps Engineer with a mission to simplify security.
+                My approach is not just about building walls, but about building
+                <Text as="span" fontWeight="bold" color={textColor}> resilient, automated ecosystems</Text> that
+                empower developers while keeping global infrastructures safe.
+              </Text>
+            </VStack>
 
-          <SimpleGrid columns={[1, 2, 4]} spacing={6}>
-            {AboutCards.map((card, index) => (
-              <Box
-                key={index}
-                bg={cardBg}
-                boxShadow={cardShadow}
-                borderRadius="lg"
-                p={6}
-                textAlign="center"
-                transition="all 0.3s ease"
-                border="1px solid"
-                borderColor={cardBorderColor}
-                _hover={{
-                  transform: 'scale(1.05)',
-                  boxShadow: useColorModeValue(
-                    '0 10px 15px rgba(0, 0, 0, 0.15)', 
-                    '0 10px 15px rgba(255, 255, 255, 0.1)'
-                  )
-                }}
-              >
-                <VStack spacing={4}>
-                  <Icon 
-                    as={card.icon} 
-                    w={12} 
-                    h={12} 
-                    color={iconColor}
-                  />
-                  <Heading 
-                    as="h3" 
-                    size="md"
-                    color={headingColor}
-                  >
-                    {card.title}
-                  </Heading>
-                  <Text color={textColor}>
-                    {card.description}
-                  </Text>
-                </VStack>
-              </Box>
-            ))}
-          </SimpleGrid>
+            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6} flex={1.2}>
+              {AboutCards.map((card, index) => (
+                <MotionBox
+                  key={index}
+                  bg={cardBg}
+                  p={8}
+                  borderRadius="3xl"
+                  border="1px solid"
+                  borderColor={borderColor}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 } as any}
+                  whileHover={{ translateY: -5, borderColor: accentColor } as any}
+                >
+                  <VStack align="start" spacing={4}>
+                    <Icon as={card.icon} w={8} h={8} color={accentColor} />
+                    <Heading size="md" fontWeight="bold">
+                      {card.title}
+                    </Heading>
+                    <Text color={mutedColor} fontSize="sm">
+                      {card.description}
+                    </Text>
+                  </VStack>
+                </MotionBox>
+              ))}
+            </SimpleGrid>
+          </Flex>
         </VStack>
       </Container>
     </Box>

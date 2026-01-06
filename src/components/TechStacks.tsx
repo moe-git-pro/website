@@ -1,494 +1,250 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { 
-  Box, 
-  Heading, 
-  VStack, 
-  
-  IconButton,
- 
+import React, { useState, useEffect } from 'react';
+import {
+  Box,
+  Heading,
+  VStack,
   Text,
   Icon,
   useColorModeValue,
   Image as ChakraImage,
- 
-  
   Grid,
+  Container,
+  Badge,
+  Flex,
+  HStack,
+  chakra,
+  shouldForwardProp
 } from '@chakra-ui/react';
-import { FaChevronLeft, FaChevronRight, FaCode, FaDatabase, FaShieldAlt, FaCloud, FaTerminal, FaChartLine } from 'react-icons/fa';
+import { motion, AnimatePresence, isValidMotionProp } from 'framer-motion';
+import {
+  FaCode,
+  FaDatabase,
+  FaShieldAlt,
+  FaCloud,
+  FaTerminal,
+  FaChartLine
+} from 'react-icons/fa';
+
+const MotionBox = chakra(motion.div, {
+  shouldForwardProp: (prop) => isValidMotionProp(prop) || shouldForwardProp(prop),
+});
 
 const technologies = [
   {
-    name: 'Cloud & Infrastructure Orchestration',
-    description: 'Advanced container and cloud management technologies',
-    tools: [
-      { 
-        name: 'Kubernetes', 
-        logoImport: () => import('../assets/images/kubernetes.png'),
-        description: 'Container orchestration platform for automating deployment, scaling, and management of containerized applications.'
-      },
-      { 
-        name: 'Docker', 
-        logoImport: () => import('../assets/images/docker.png'),
-        description: 'Containerization platform that enables developers to package, distribute, and run applications in isolated environments.'
-      },
-      { 
-        name: 'Helm', 
-        logoImport: () => import('../assets/images/helm.png'),
-        description: 'Package manager for Kubernetes that simplifies deployment of complex applications.'
-      },
-      { 
-        name: 'Terraform', 
-        logoImport: () => import('../assets/images/terraform.png'),
-        description: 'Infrastructure as Code tool for provisioning and managing cloud resources.'
-      },
-      { 
-        name: 'Consul', 
-        logoImport: () => import('../assets/images/consul.png'),
-        description: 'Service networking solution to connect and configure services across any runtime platform.'
-      },
-      { 
-        name: 'AWS', 
-        description: 'Amazon Web Services, a comprehensive cloud computing platform.' 
-      },
-      { 
-        name: 'ArgoCD', 
-        description: 'A declarative, GitOps continuous delivery tool for Kubernetes.' 
-      },
-    ]
-  },
-  {
-    name: 'Security & Compliance',
-    description: 'Advanced security and compliance tools',
-    tools: [
-      { 
-        name: 'Hashicorp Vault', 
-        logoImport: () => import('../assets/images/hashicorp-vault.png'),
-        description: 'Tool for securely accessing secrets like API keys, passwords, and certificates.'
-      },
-      { 
-        name: 'OWASP ZAP', 
-        logoImport: () => import('../assets/images/owasp-zap.png'),
-        description: 'Web application security scanner used to find vulnerabilities in web applications.'
-      },
-      { 
-        name: 'Trivy', 
-        logoImport: () => import('../assets/images/trivy.png'),
-        description: 'Comprehensive security scanner for containers and other artifacts.'
-      },
-      { 
-        name: 'NIST', 
-        logoImport: () => import('../assets/images/nist.png'),
-        description: 'Cybersecurity framework for improving critical infrastructure cybersecurity.'
-      },
-      { 
-        name: 'ISO 27001', 
-        logoImport: () => import('../assets/images/iso27001.png'),
-        description: 'International standard for information security management systems.'
-      },
-      { 
-        name: 'SonarQube', 
-        description: 'Continuous inspection tool for code quality and security.' 
-      },
-      { 
-        name: 'Semgrep', 
-        description: 'Static analysis tool for finding bugs and enforcing coding standards.' 
-      },
-      { 
-        name: 'Netskope', 
-        description: 'Cloud security platform for protecting data and users.' 
-      },
-    ]
-  },
-  {
-    name: 'Continuous Integration & Deployment',
-    description: 'Automation and workflow management tools',
-    tools: [
-      { 
-        name: 'Jenkins', 
-        logoImport: () => import('../assets/images/jenkins.png'),
-        description: 'Open-source automation server for building, testing, and deploying software.'
-      },
-      { 
-        name: 'GitHub Actions', 
-        logoImport: () => import('../assets/images/github-actions.png'),
-        description: 'Workflow automation and CI/CD directly within GitHub repositories.'
-      },
-      { 
-        name: 'Linux', 
-        logoImport: () => import('../assets/images/linux.png'),
-        description: 'Open-source operating system crucial for DevOps and server management.'
-      },
-      { 
-        name: 'Git', 
-        logoImport: () => import('../assets/images/git.png'),
-        description: 'Distributed version control system for tracking changes in source code.'
-      },
-    ]
-  },
-  {
-    name: 'Automation & Scripting',
-    description: 'Tools for automation and scripting',
-    tools: [
-      { 
-        name: 'PowerShell', 
-        description: 'Task automation and configuration management framework from Microsoft.' 
-      },
-      { 
-        name: 'Ansible', 
-        logoImport: () => import('../assets/images/ansible.png'),
-        description: 'Automation tool for configuration management, application deployment, and task automation.'
-      },
-    ]
-  },
-  {
-    name: 'Monitoring & Observability',
-    description: 'Performance tracking and system insights',
-    tools: [
-      { 
-        name: 'Prometheus', 
-        logoImport: () => import('../assets/images/prometheus.png'),
-        description: 'Open-source monitoring and alerting toolkit designed for reliability and scalability.'
-      },
-      { 
-        name: 'Grafana', 
-        logoImport: () => import('../assets/images/grafana.png'),
-        description: 'Multi-platform analytics and interactive visualization web application.'
-      },
-      { 
-        name: 'Elasticsearch', 
-        logoImport: () => import('../assets/images/elasticsearch.png'),
-        description: 'Distributed, RESTful search and analytics engine capable of addressing a growing number of use cases.'
-      },
-      { 
-        name: 'Logstash', 
-        logoImport: () => import('../assets/images/logstash.png'),
-        description: 'Server-side data processing pipeline that ingests data from multiple sources simultaneously.'
-      },
-      { 
-        name: 'Fluentd', 
-        logoImport: () => import('../assets/images/fluentd.png'),
-        description: 'Open-source data collector for unifying data processing and analytics.'
-      },
-      { 
-        name: 'Beats', 
-        logoImport: () => import('../assets/images/beats.png'),
-        description: 'Lightweight data shippers for sending data from edge machines to Logstash or Elasticsearch.'
-      },
-      { 
-        name: 'GAT+', 
-        logoImport: () => import('../assets/images/gat-plus.png'),
-        description: 'Advanced monitoring and analytics tool for comprehensive system insights.'
-      },
-    ]
-  },
-  {
-    name: 'Database & Storage Solutions',
-    description: 'Versatile data management and storage technologies',
-    tools: [
-      { 
-        name: 'MySQL', 
-        logoImport: () => import('../assets/images/mysql.png'),
-        description: 'Popular open-source relational database management system.'
-      },
-      { 
-        name: 'MongoDB', 
-        logoImport: () => import('../assets/images/mongodb.png'),
-        description: 'Document-oriented NoSQL database for scalable and flexible data storage.'
-      },
-      { 
-        name: 'Postgres', 
-        logoImport: () => import('../assets/images/postgres.png'),
-        description: 'Advanced open-source relational database with robust feature set.'
-      },
-      { 
-        name: 'Firebase', 
-        logoImport: () => import('../assets/images/firebase.png'),
-        description: 'Comprehensive app development platform with real-time database and backend services.'
-      },
-    ]
-  },
-  {
-    name: 'Programming & Scripting Languages',
-    description: 'Versatile programming skills across multiple domains',
-    tools: [
-      { 
-        name: 'Python', 
-        logoImport: () => import('../assets/images/python.png'),
-        description: 'High-level, interpreted programming language known for its versatility and readability.'
-      },
-      { 
-        name: 'JavaScript', 
-        logoImport: () => import('../assets/images/javascript.png'),
-        description: 'Lightweight, interpreted programming language for web development.'
-      },
-      { 
-        name: 'Bash', 
-        logoImport: () => import('../assets/images/bash.png'),
-        description: 'Unix shell and command language for automation and scripting.'
-      },
-      { 
-        name: 'PHP', 
-        logoImport: () => import('../assets/images/php.png'),
-        description: 'Server-side scripting language designed for web development.'
-      },
-      { 
-        name: 'C++', 
-        logoImport: () => import('../assets/images/cpp.png'),
-        description: 'High-performance programming language used in system/software development.'
-      },
-      { 
-        name: 'Dart', 
-        logoImport: () => import('../assets/images/dart.png'),
-        description: 'Programming language optimized for building mobile, desktop, server, and web applications.'
-      },
-    ]
-  }
-];
-
-const categoryDetails = [
-  {
-    name: 'Cloud & Infrastructure Orchestration',
+    name: 'Infrastructure & Cloud',
     icon: FaCloud,
-    color: 'blue.500'
+    tools: [
+      { name: 'Kubernetes', logoImport: () => import('../assets/images/kubernetes.png'), description: 'Container orchestration platform for scalable apps.' },
+      { name: 'Docker', logoImport: () => import('../assets/images/docker.png'), description: 'Platform for developing and running containerized apps.' },
+      { name: 'Helm', logoImport: () => import('../assets/images/helm.png'), description: 'The package manager for Kubernetes.' },
+      { name: 'Terraform', logoImport: () => import('../assets/images/terraform.png'), description: 'Infrastructure as Code for cloud provisioning.' },
+      { name: 'Consul', logoImport: () => import('../assets/images/consul.png'), description: 'Service networking and service mesh solution.' },
+      { name: 'AWS', logoImport: () => import('../assets/images/aws.png'), description: 'Amazon Web Services cloud computing platform.' },
+      { name: 'ArgoCD', logoImport: () => import('../assets/images/argocd.png'), description: 'GitOps continuous delivery for Kubernetes.' },
+      { name: 'Envoy', logoImport: () => import('../assets/images/envoy.png'), description: 'High-performance edge and service proxy.' }
+    ]
   },
   {
     name: 'Security & Compliance',
     icon: FaShieldAlt,
-    color: 'red.500'
+    tools: [
+      { name: 'Hashicorp Vault', logoImport: () => import('../assets/images/hashicorp-vault.png'), description: 'Secure secrets management and encryption.' },
+      { name: 'OWASP ZAP', logoImport: () => import('../assets/images/owasp-zap.png'), description: 'Active web application security scanner.' },
+      { name: 'Trivy', logoImport: () => import('../assets/images/trivy.png'), description: 'Vulnerability scanner for containers and IAC.' },
+      { name: 'NIST', logoImport: () => import('../assets/images/nist.png'), description: 'Industry standard cybersecurity framework.' },
+      { name: 'ISO 27001', logoImport: () => import('../assets/images/iso27001.png'), description: 'Information security management standard.' },
+      { name: 'SonarQube', logoImport: () => import('../assets/images/sonarqube.png'), description: 'Continuous code quality and security scanning.' },
+      { name: 'Semgrep', logoImport: () => import('../assets/images/semgrep.png'), description: 'Static analysis for security and compliance.' },
+      { name: 'Netskope', description: 'Cloud-native data security and access control.' }
+    ]
   },
   {
-    name: 'Automation & Scripting',
+    name: 'DevOps & Automation',
     icon: FaTerminal,
-    color: 'green.500'
+    tools: [
+      { name: 'Jenkins', logoImport: () => import('../assets/images/jenkins.png'), description: 'Leading open source automation server.' },
+      { name: 'GitHub Actions', logoImport: () => import('../assets/images/github-actions.png'), description: 'CI/CD and automation directly in GitHub.' },
+      { name: 'Linux', logoImport: () => import('../assets/images/linux.png'), description: 'The foundation for server and cloud operations.' },
+      { name: 'Git', logoImport: () => import('../assets/images/git.png'), description: 'Distributed version control and source management.' },
+      { name: 'Ansible', logoImport: () => import('../assets/images/ansible.png'), description: 'Simple, agentless IT automation.' }
+    ]
   },
   {
-    name: 'Continuous Integration & Deployment',
-    icon: FaTerminal,
-    color: 'green.500'
-  },
-  {
-    name: 'Monitoring & Observability',
-    icon: FaChartLine,
-    color: 'blue.500'
-  },
-  {
-    name: 'Database & Storage Solutions',
-    icon: FaDatabase,
-    color: 'blue.500'
-  },
-  {
-    name: 'Programming & Scripting Languages',
+    name: 'Languages & Scripting',
     icon: FaCode,
-    color: 'blue.500'
+    tools: [
+      { name: 'Python', logoImport: () => import('../assets/images/python.png'), description: 'Versatile language for automation and security.' },
+      { name: 'JavaScript', logoImport: () => import('../assets/images/javascript.png'), description: 'Core language for frontend and serverless.' },
+      { name: 'Bash', logoImport: () => import('../assets/images/bash.png'), description: 'Essential scripting for Unix-like systems.' },
+      { name: 'PowerShell', description: 'Cross-platform task automation and configuration.' }
+    ]
+  },
+  {
+    name: 'Observability',
+    icon: FaChartLine,
+    tools: [
+      { name: 'Prometheus', logoImport: () => import('../assets/images/prometheus.png'), description: 'Monitoring and alerting for time-series data.' },
+      { name: 'Grafana', logoImport: () => import('../assets/images/grafana.png'), description: 'Rich visualization for metrics and logs.' },
+      { name: 'Elasticsearch', logoImport: () => import('../assets/images/elasticsearch.png'), description: 'Distributed search and analytics engine.' },
+      { name: 'Logstash', logoImport: () => import('../assets/images/logstash.png'), description: 'Server-side data processing pipeline.' }
+    ]
+  },
+  {
+    name: 'Databases',
+    icon: FaDatabase,
+    tools: [
+      { name: 'Postgres', logoImport: () => import('../assets/images/postgres.png'), description: 'Advanced relational database system.' },
+      { name: 'MongoDB', logoImport: () => import('../assets/images/mongodb.png'), description: 'Scalable document-oriented NoSQL database.' },
+      { name: 'MySQL', logoImport: () => import('../assets/images/mysql.png'), description: 'Widely used relational database manager.' }
+    ]
   }
 ];
 
 export const TechStacks: React.FC = () => {
   const [currentCategory, setCurrentCategory] = useState(0);
-  const [logoStates, setLogoStates] = useState<{ [key: string]: string | undefined }>({});
-  
-  const loadLogo = async (logoImport?: () => Promise<{ default: string }>) => {
-    if (!logoImport) return undefined;
-    try {
-      const logo = await logoImport();
-      return logo.default;
-    } catch (error) {
-      console.error(`Logo import failed for: ${logoImport.toString()}`, error);
-      return undefined;
-    }
-  };
+  const [logoStates, setLogoStates] = useState<{ [key: string]: string }>({});
+
+  const bgColor = useColorModeValue('light.bg', 'dark.bg');
+  const cardBg = useColorModeValue('light.card', 'dark.card');
+  const textColor = useColorModeValue('light.text', 'dark.text');
+  const mutedColor = useColorModeValue('light.muted', 'dark.muted');
+  const accentColor = useColorModeValue('brand.500', 'brand.400');
+  const borderColor = useColorModeValue('light.border', 'dark.border');
 
   useEffect(() => {
-    const loadAllLogos = async () => {
-      const loadedLogos: { [key: string]: string | undefined } = {};
-      
+    const loadLogos = async () => {
+      const loaded: { [key: string]: string } = {};
       for (const category of technologies) {
-        for (const tech of category.tools) {
-          if (tech.logoImport) {
+        await Promise.all(category.tools.map(async (tech) => {
+          if ('logoImport' in tech && tech.logoImport) {
             try {
-              const logo = await loadLogo(tech.logoImport);
-              if (logo) {
-                loadedLogos[tech.name] = logo;
-              }
-            } catch (error) {
-              console.error(`Failed to load logo for ${tech.name}`, error);
+              const mod = await tech.logoImport();
+              loaded[tech.name] = mod.default;
+            } catch (e) {
+              console.error(`Failed to load ${tech.name}`, e);
             }
           }
-        }
+        }));
       }
-      
-      setLogoStates(loadedLogos);
+      setLogoStates(loaded);
     };
-
-    loadAllLogos();
+    loadLogos();
   }, []);
 
-  const bgColor = useColorModeValue('white', 'gray.900');
-  const iconColor = useColorModeValue('blue.600', 'blue.200');
-  const textColor = useColorModeValue('gray.700', 'gray.200');
-
-  const sliderRef = useRef<HTMLDivElement>(null);
-
   return (
-    <Box 
-      id="tech-stacks"
-      bg={bgColor}
-      py={16}
-      px={[4, 8, 16]}
-      display="flex" 
-      alignItems="center" 
-      justifyContent="center"       
-    >
-      <VStack spacing={8} align="stretch" maxWidth="1250px" >
-        <Heading 
-          textAlign="center" 
-          fontSize={['2xl', '3xl', '4xl']} 
-          mb={6}
-          color={useColorModeValue('blue.700', 'blue.300')}
-        >
-          Technology Expertise
-        </Heading>
+    <Box as="section" id="tech-stacks" py={24} bg={bgColor}>
+      <Container maxW="container.xl">
+        <VStack spacing={16} align="stretch">
+          <VStack spacing={4} textAlign="center">
+            <Badge colorScheme="brand" variant="subtle" px={4} py={1} borderRadius="full">
+              Tech Stack
+            </Badge>
+            <Heading fontSize={{ base: '3xl', md: '4xl' }} fontWeight="800">
+              Toolbox & Technologies
+            </Heading>
+            <Text color={mutedColor} fontSize="lg" maxW="2xl">
+              A comprehensive collection of tools and frameworks I use to build,
+              secure, and scale modern applications.
+            </Text>
+          </VStack>
 
-        {/* Category Selector */}
-        <Box 
-          position="relative"
-        >
-          <IconButton 
-            icon={<FaChevronLeft />} 
-            aria-label="Scroll Left" 
-            position="absolute" 
-            left={0} 
-            top="50%" 
-            transform="translateY(-50%)" 
-            onClick={() => sliderRef.current?.scrollBy({ left: -100, behavior: 'smooth' })} 
-            variant="ghost" 
-            color={iconColor}
-          />
-          <IconButton 
-            icon={<FaChevronRight />} 
-            aria-label="Scroll Right" 
-            position="absolute" 
-            right={0} 
-            top="50%" 
-            transform="translateY(-50%)" 
-            onClick={() => sliderRef.current?.scrollBy({ left: 100, behavior: 'smooth' })} 
-            variant="ghost" 
-            color={iconColor}
-          />
-          <Box 
-            ref={sliderRef}
-            position="relative"
-            overflowX="auto"
-            display="flex"
-            flexWrap="wrap"
-            justifyContent="space-between"
+          {/* Category Tabs */}
+          <Flex
+            wrap="wrap"
+            justify="center"
+            gap={4}
           >
-            {technologies.map((category, index) => (
+            {technologies.map((cat, idx) => (
               <Box
-                key={category.name}
                 as="button"
-                draggable="true"
-                onClick={() => setCurrentCategory(index)}
-                px={4}
-                py={2}
-                borderRadius="full"
-                fontWeight="semibold"
+                key={cat.name}
+                onClick={() => setCurrentCategory(idx)}
+                px={6}
+                py={3}
+                borderRadius="2xl"
+                fontWeight="700"
                 fontSize="sm"
-                bg={currentCategory === index ? 'blue.500' : 'gray.200'}
-                color={currentCategory === index ? 'white' : 'black'}
-                style={{ flex: '1 1 150px', margin: '5px' }}
-              >
-                {category.name}
-              </Box>
-            ))}
-          </Box>
-        </Box>
-
-        {/* Technology Cards */}
-        <Grid 
-          templateColumns={['repeat(2, 1fr)', 'repeat(3, 1fr)', 'repeat(4, 1fr)']} 
-          gap={[2, 4, 6]}
-        >
-          {technologies[currentCategory].tools.map((tech) => {
-            const CategoryIcon = categoryDetails[currentCategory].icon;
-            return (
-              <Box
-                key={tech.name}
-                bg={useColorModeValue('white', 'gray.800')}
-                borderRadius="lg"
-                p={[2, 3, 4]}
-                boxShadow="md"
-                border="1px"
-                borderColor={useColorModeValue('gray.200', 'gray.700')}
-                textAlign="center"
-                height="100%"
-                position="relative"
-                overflow="hidden"
-                transition="all 0.3s ease"
+                bg={currentCategory === idx ? accentColor : cardBg}
+                color={currentCategory === idx ? 'white' : textColor}
+                border="1px solid"
+                borderColor={currentCategory === idx ? accentColor : borderColor}
+                transition="all 0.2s"
                 _hover={{
-                  transform: 'translateY(-5px)',
-                  boxShadow: 'lg',
-                  borderColor: useColorModeValue('gray.300', 'gray.600')
+                  borderColor: accentColor,
+                  transform: 'translateY(-2px)'
                 }}
               >
-                {/* Category Icon */}
-                <Box 
-                  position="absolute" 
-                  top={2} 
-                  right={2} 
-                  color={iconColor}
-                  opacity={0.5}
-                >
-                  <CategoryIcon size={20} />
-                </Box>
-
-                {/* Technology Logo */}
-                <Box 
-                  display="flex" 
-                  justifyContent="center" 
-                  alignItems="center" 
-                  mb={3} 
-                  height={[50, 70, 90]}
-                >
-                  {logoStates[tech.name] ? (
-                    <ChakraImage 
-                      src={logoStates[tech.name]} 
-                      alt={`${tech.name} logo`} 
-                      maxHeight={[50, 70, 90]} 
-                      maxWidth={[50, 70, 90]} 
-                      objectFit="contain"
-                    />
-                  ) : (
-                    <Icon 
-                      as={CategoryIcon} 
-                      boxSize={[8, 10, 12]} 
-                      color={iconColor} 
-                    />
-                  )}
-                </Box>
-
-                {/* Technology Details */}
-                <VStack spacing={1}>
-                  <Text 
-                    fontWeight="bold" 
-                    fontSize={['sm', 'md']} 
-                    mb={1}
-                  >
-                    {tech.name}
-                  </Text>
-                  <Text 
-                    fontSize={['xs', 'sm']} 
-                    color={textColor} 
-                    noOfLines={2}
-                  >
-                    {tech.description}
-                  </Text>
-                </VStack>
+                <HStack spacing={2}>
+                  <Icon as={cat.icon} />
+                  <Text>{cat.name}</Text>
+                </HStack>
               </Box>
-            );
-          })}
-        </Grid>
-      </VStack>
+            ))}
+          </Flex>
+
+          {/* Tools Grid */}
+          <AnimatePresence mode="wait">
+            <MotionBox
+              key={currentCategory}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 } as any}
+            >
+              <Grid
+                templateColumns={{ base: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' }}
+                gap={6}
+              >
+                {technologies[currentCategory].tools.map((tech) => (
+                  <MotionBox
+                    key={tech.name}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    bg={cardBg}
+                    p={6}
+                    borderRadius="2xl"
+                    border="1px solid"
+                    borderColor={borderColor}
+                    whileHover={{ translateY: -5, borderColor: accentColor } as any}
+                  >
+                    <VStack align="start" spacing={4}>
+                      <Box
+                        bg={useColorModeValue('gray.50', 'whiteAlpha.50')}
+                        p={3}
+                        borderRadius="xl"
+                        h="60px"
+                        w="60px"
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        {logoStates[tech.name] ? (
+                          <ChakraImage
+                            src={logoStates[tech.name]}
+                            alt={tech.name}
+                            maxH="100%"
+                            maxW="100%"
+                            objectFit="contain"
+                          />
+                        ) : (
+                          <Icon as={technologies[currentCategory].icon} color={accentColor} boxSize={6} />
+                        )}
+                      </Box>
+                      <VStack align="start" spacing={1}>
+                        <Text fontWeight="800" fontSize="md">{tech.name}</Text>
+                        <Text fontSize="xs" color={mutedColor} lineHeight="tall">
+                          {tech.description}
+                        </Text>
+                      </VStack>
+                    </VStack>
+                  </MotionBox>
+                ))}
+              </Grid>
+            </MotionBox>
+          </AnimatePresence>
+        </VStack>
+      </Container>
     </Box>
   );
 };

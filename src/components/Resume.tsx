@@ -1,29 +1,34 @@
-import React, { useState, useMemo } from 'react';
-import { 
-  Box, 
-  VStack, 
-  HStack, 
-  Text, 
-  Heading, 
-  Icon, 
-  Flex, 
+import React, { useState } from 'react';
+import {
+  Box,
+  VStack,
+  HStack,
+  Text,
+  Heading,
+  Icon,
+  Flex,
   useColorModeValue,
   Badge,
-  
   Container,
-  useBreakpointValue
+  Circle,
+  Button,
+  chakra,
+  shouldForwardProp
 } from '@chakra-ui/react';
-import { 
-  FaBriefcase, 
+import { motion, isValidMotionProp } from 'framer-motion';
+import {
+  FaBriefcase,
   FaMapMarkerAlt,
   FaCode,
+  FaChevronDown,
+  FaChevronUp
 } from 'react-icons/fa';
-import { 
-  SiKubernetes, 
-  SiDocker, 
-  SiHelm, 
-  SiTerraform, 
-  SiConsul, 
+import {
+  SiKubernetes,
+  SiDocker,
+  SiHelm,
+  SiTerraform,
+  SiConsul,
   SiVault,
   SiGooglecloud,
   SiGrafana,
@@ -37,7 +42,13 @@ import {
   SiJavascript
 } from 'react-icons/si';
 
-// Create a motion-enabled Chakra component
+const MotionFlex = chakra(motion.div, {
+  shouldForwardProp: (prop) => isValidMotionProp(prop) || shouldForwardProp(prop),
+});
+
+const MotionBox = chakra(motion.div, {
+  shouldForwardProp: (prop) => isValidMotionProp(prop) || shouldForwardProp(prop),
+});
 
 interface Experience {
   title: string;
@@ -45,7 +56,7 @@ interface Experience {
   period: string;
   location: string;
   responsibilities: string[];
-  technologies?: string[];
+  Keywords?: string[];
   icon: React.ElementType;
   color: string;
   date: Date;
@@ -53,80 +64,64 @@ interface Experience {
 
 const professionalExperiences: Experience[] = [
   {
+    title: 'Technical Team',
+    company: 'Hackfest',
+    location: 'Tunis, Tunisia',
+    period: 'Mar 2023 – Jun 2023',
+    icon: FaBriefcase,
+    color: 'orange.500',
+    date: new Date(2023, 2, 1),
+    responsibilities: [
+      'Preparing challenges for the CTF competition (Web Exploitation, Cryptography)'
+    ],
+    Keywords: [
+      'CTF', 'Web Exploitation', 'Cryptography'
+    ]
+  },
+  {
+    title: 'Internship',
+    company: '6NLG(2SB) - SUP’COM',
+    location: 'Tunis, Tunisia',
+    period: 'Sep 2023 – Present',
+    icon: FaBriefcase,
+    color: 'green.500',
+    date: new Date(2023, 8, 1),
+    responsibilities: [
+      'Secured cloud services using Reverse Proxy and Cloud Access Security Broker (CASB) solutions.',
+      'Implemented robust cloud security, data protection, and access control leveraging Netskope CASB, SWG, and ZTNA technologies.',
+      'Developed, enforced, and monitored security policies to ensure compliance, reduce risk, and protect sensitive data.'
+    ],
+    Keywords: [
+      'Reverse Proxy', 'CASB', 'Netskope', 'SWG', 'ZTNA', 'Cloud Security'
+    ]
+  },
+  {
     title: 'DevSecOps Engineer',
     company: 'Cytailor',
     location: 'Tunis, Tunisia',
-    period: 'Sep 2024 – Present',
+    period: 'Jul 2023 – Present',
     icon: FaBriefcase,
     color: 'blue.500',
-    date: new Date(2024, 8, 1),
+    date: new Date(2023, 6, 1),
     responsibilities: [
-      'Configured and deployed HashiCorp Consul as a service mesh and service discovery solution within a Kubernetes cluster',
-      'Implemented Consul Connect to secure service-to-service communication through mutual TLS',
-      'Set up Consul\'s KV store for centralized configuration management',
-      'Utilized Consul\'s health checking and monitoring capabilities',
-      'Integrated Consul with Kubernetes for seamless workload discovery',
-      'Configured Consul ACLs to enforce fine-grained permissions',
-      'Automated deployment and scaling of Consul agents across nodes'
+      'Designed and deployed secure CI/CD pipelines for 7+ microservices on Amazon EKS using GitHub Actions, ArgoCD, Helm, and Git, integrating Semgrep (SAST), Trivy (container scanning), and OWASP ZAP (DAST), achieving ~90% compliance with the DoD DevSecOps Playbook.',
+      'Accelerated deployments by 40% and reduced pipeline failures by 25% through GitOps practices, continuous drift detection, and automated secrets management with HashiCorp Vault.',
+      'Centralized credential handling using Vault and Vault Secrets Injection (Vault SCI), eliminating hardcoded secrets and enforcing secure, automated secrets distribution across microservices.',
+      'Led the migration of multiple microservices from AWS to OVH, contributing to the design of a scalable, reliable, and secure infrastructure architecture.',
+      'Deployed and operated HashiCorp Consul across multi-cluster Kubernetes environments on AWS (EKS) and OVH, reducing microservice latency by 30% and enforcing mTLS, RBAC, and ACL-based security.',
+      'Designed and enforced Consul ACL policies with least-privilege access control, improving cluster security and compliance posture.',
+      'Participated in a security consulting engagement for a French client, improving security posture through policy enforcement and governance controls.',
+      'Designed and implemented a lightweight automated mini-SOC using Make automation and Google GAT+, enabling continuous monitoring and security reporting.',
+      'Built an automated reporting mechanism delivering weekly summaries of high-risk or non-compliant activities for administrative review, aligned with organizational data protection policies.',
+      'Conducted a workshop for a French 5G client on microservices security, covering secure API gateway configuration, HashiCorp Consul implementation, and best practices for securing their Dockerized 5G environment.',
+      'Led DevSecOps security consulting for a French 5G organization, securing Docker and Kubernetes architectures with HashiCorp Consul for PKI, automated certificate management, and mTLS.',
+      'Developed a cybersecurity knowledge base using a Retrieval-Augmented Generation (RAG) architecture, generating vector embeddings with Amazon Bedrock and storing them in Amazon Aurora PostgreSQL with pgvector to enable LLM-powered semantic search and querying.'
     ],
-    technologies: [
-      'HashiCorp Consul', 'Kubernetes', 'Service Mesh', 'Microservices', 'ACL'
-    ]
-  },
-  {
-    title: 'DevSecOps Engineer Intern',
-    company: 'Cytailor',
-    location: 'Tunis, Tunisia',
-    period: 'Feb 2024 – Aug 2024',
-    icon: FaBriefcase,
-    color: 'green.500',
-    date: new Date(2024, 1, 1),
-    responsibilities: [
-      'Streamlined CI/CD pipelines using GitOps workflow with ArgoCD, Git, Helm, Kubernetes, and Vault',
-      'Automated vulnerability evaluation process by integrating external and internal factors into CVSS scoring',
-      'Designed and deployed serverless architecture on AWS for risk assessment',
-      'Created real-time dashboards in Grafana to visualize vulnerability risk metrics'
-    ],
-    technologies: [
-      'ArgoCD', 'GitOps', 'Kubernetes', 'AWS Lambda', 'Grafana', 'CVSS'
-    ]
-  },
-  {
-    title: 'Junior Cybersecurity Consultant',
-    company: 'Cytailor',
-    location: 'Tunis, Tunisia',
-    period: 'Sep 2023 – Feb 2024',
-    icon: FaBriefcase,
-    color: 'red.500',
-    date: new Date(2023, 8, 1),
-    responsibilities: [
-      'Implemented activity monitoring system on Google Workspace',
-      'Utilized CASB solution (GAT+) to create security policy for access control',
-      'Developed automated monitoring system using Large Language Models for anomaly detection'
-    ],
-    technologies: [
-      'CASB', 'Google Workspace', 'Large Language Models', 'Security Monitoring'
-    ]
-  },
-  {
-    title: 'SIEM Implementation Specialist',
-    company: 'Cybersecurity Project',
-    location: 'Tunis, Tunisia',
-    period: 'Jun 2023 – Aug 2023',
-    icon: FaBriefcase,
-    color: 'purple.500',
-    date: new Date(2023, 5, 1),
-    responsibilities: [
-      'Implemented SIEM system using OpenSearch, Logstash',
-      'Created custom correlation rules within OpenSearch',
-      'Configured real-time alerting for security incidents',
-      'Integrated and fine-tuned Snort and pfSense logs'
-    ],
-    technologies: [
-      'OpenSearch', 'Logstash', 'SIEM', 'Snort', 'pfSense'
+    Keywords: [
+      'Amazon EKS', 'GitHub Actions', 'ArgoCD', 'Helm', 'Semgrep', 'Trivy', 'OWASP ZAP', 'Hashicorp Vault', 'GitOps', 'HashiCorp Consul', 'mTLS', 'RBAC', 'ACL', 'AWS', 'OVH', 'Docker', 'Kubernetes', 'Amazon Bedrock', 'Amazon Aurora', 'pgvector', 'RAG'
     ]
   }
-].sort((a, b) => b.date.getTime() - a.date.getTime());
+];
 
 const getTechnologyIcon = (technology: string) => {
   const normalizedTech = technology.toLowerCase().trim();
@@ -148,273 +143,180 @@ const getTechnologyIcon = (technology: string) => {
     'python': SiPython,
     'javascript': SiJavascript
   };
-  
-  // Exact match first
-  if (iconMap[normalizedTech]) {
-    return iconMap[normalizedTech];
-  }
-  
-  // Partial match
+
+  if (iconMap[normalizedTech]) return iconMap[normalizedTech];
   for (const [key, icon] of Object.entries(iconMap)) {
-    if (normalizedTech.includes(key)) {
-      return icon;
-    }
+    if (normalizedTech.includes(key)) return icon;
   }
-  
-  // Return white circle if no match
-  return FaMapMarkerAlt;
+  return FaCode;
 };
 
-interface ResumeProps {}
+export const Resume: React.FC = () => {
+  const [activeExperience, setActiveExperience] = useState<number | null>(0);
 
-export const Resume: React.FC<ResumeProps> = () => {
-  const [activeExperience, setActiveExperience] = useState<number | null>(null);
-  
-  const isMobile = useBreakpointValue({ base: true, md: false });
-
-  const bgColor = useColorModeValue('white', 'gray.900');
-  const textColor = useColorModeValue('gray.700', 'gray.200');
-  const accentColor = useColorModeValue('blue.500', 'blue.300');
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
-  const cardBgColor = useColorModeValue('white', 'gray.800');
-  const activeCardBgColor = useColorModeValue('blue.50', 'blue.900');
-  const detailsBgColor = useColorModeValue('gray.50', 'gray.800');
-
-  const colors = useMemo(() => ({
-    bgColor,
-    textColor,
-    accentColor,
-    borderColor,
-    cardBgColor,
-    activeCardBgColor,
-    detailsBgColor
-  }), [bgColor, textColor, accentColor, borderColor, cardBgColor, activeCardBgColor, detailsBgColor]);
-
-  const toggleExperience = (index: number) => {
-    setActiveExperience(activeExperience === index ? null : index);
-  };
-
-  const headingColor = useColorModeValue('blue.700', 'blue.300');
+  const bgColor = useColorModeValue('light.bg', 'dark.bg');
+  const textColor = useColorModeValue('light.text', 'dark.text');
+  const mutedColor = useColorModeValue('light.muted', 'dark.muted');
+  const borderColor = useColorModeValue('light.border', 'dark.border');
+  const cardBg = useColorModeValue('light.card', 'dark.card');
+  const accentColor = useColorModeValue('brand.500', 'brand.400');
 
   return (
-    <Container maxW="1250px" px={{ base: 4, md: 8 }} margin="0 auto">
-      <Box 
-        id="resume"
-        bg={bgColor}
-        py={16}
-        px={0}
-        position="relative"
-        overflow="hidden"
-      >
-        {/* Vertical Timeline Line */}
-        <Box
-          position="absolute"
-          left="50%"
-          top="200px"
-          bottom="0"
-          width="4px"
-          bg={borderColor}
-          transform="translateX(-50%)"
-          display={isMobile ? 'none' : 'block'}
-          zIndex={1}
-          opacity={0.7}
-          borderRadius="full"
-        />
+    <Box id="resume" bg={bgColor} py={24}>
+      <Container maxW="container.lg">
+        <VStack spacing={16} align="stretch">
+          <VStack spacing={4} textAlign="center">
+            <Badge colorScheme="brand" variant="subtle" px={4} py={1} borderRadius="full">
+              Journey
+            </Badge>
+            <Heading fontSize={{ base: '3xl', md: '4xl' }} fontWeight="800">
+              Professional Experience
+            </Heading>
+            <Text color={mutedColor} fontSize="lg" maxW="2xl">
+              My career path in Cybersecurity and DevSecOps, focusing on building
+              secure, scalable, and resilient digital architectures.
+            </Text>
+          </VStack>
 
-        <VStack spacing={8} align="stretch" pt={8}>
-          <Heading 
-            textAlign="center" 
-            fontSize={['2xl', '3xl', '4xl']} 
-            color={headingColor}
-            mb={12}
-          >
-            Professional Experience
-          </Heading>
+          <Box position="relative">
+            {/* Timeline Line */}
+            <Box
+              position="absolute"
+              left={{ base: "20px", md: "50%" }}
+              top="0"
+              bottom="0"
+              width="2px"
+              bg={borderColor}
+              transform={{ base: "none", md: "translateX(-50%)" }}
+              zIndex={0}
+            />
 
-          <Box 
-            position="relative" 
-             alignItems="center"
-            width="full" 
-            zIndex={2}
-      
-          >
-            {professionalExperiences.map((exp, index) => (
-              <Flex 
-                key={exp.title}
-                width="full"
-                position="relative"
-                justifyContent={index % 2 === 0 ? "flex-start" : "flex-end"}
-                pl={index % 2 === 0 ? ["0", "50px", "100px"] : "0"}
-                pr={index % 2 === 0 ? "0" : ["0", "50px", "100px"]}
-                gap={[2, 4, 6]}
-              >
-                {/* Timeline Dot */}
-                {!isMobile && (
-                  <Box
-                    position="absolute"
-                    left="50%"
-                    top="30px"
-                    transform="translateX(-50%)"
-                    zIndex={2}
-                  >
-                    <Icon 
-                      as={FaMapMarkerAlt} 
-                      color={exp.color} 
-                      boxSize={6} 
-                      opacity={0.7}
-                      transition="all 0.3s ease"
-                      _hover={{
-                        transform: 'scale(1.2)',
-                        opacity: 1
-                      }}
-                    />
-                  </Box>
-                )}
-
-                <Box
-                  width={["full", "calc(50% - 75px)"]}
-                  transition={{
-                    duration: '0.6s', 
-                    delay: `${index * 0.2}s`,
-                    type: 'spring',
-                    stiffness: 'medium'
-                  }}
-        
+            <VStack spacing={12} align="stretch" position="relative" zIndex={1}>
+              {professionalExperiences.map((exp, index) => (
+                <MotionFlex
+                  key={`${exp.company}-${index}`}
+                  display="flex"
+                  flexDirection={{ base: 'row', md: index % 2 === 0 ? 'row' : 'row-reverse' }}
+                  alignItems="flex-start"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 } as any}
                 >
-                  <Box
-                    borderWidth="1px"
-                    borderRadius="xl"
-                    boxShadow="md"
-                    bg={colors.cardBgColor}
-                    borderColor={colors.borderColor}
-                    overflow="hidden"
-                    transition="all 0.3s ease"
-                    _hover={{
-                      borderColor: useColorModeValue('blue.300', 'blue.600'),
-                      boxShadow: 'lg'
-                    }}
+                  {/* Timeline Dot */}
+                  <Circle
+                    size="40px"
+                    bg={cardBg}
+                    border="2px solid"
+                    borderColor={accentColor}
+                    position="absolute"
+                    left={{ base: "0", md: "50%" }}
+                    transform={{ base: "none", md: "translateX(-50%)" }}
+                    zIndex={2}
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    boxShadow="sm"
                   >
-                    <Flex 
-                      p={4}
-                      alignItems="center"
-                      cursor="pointer"
-                      onClick={() => toggleExperience(index)}
-                      bg={activeExperience === index 
-                        ? colors.activeCardBgColor
-                        : 'transparent'
-                      }
-                      transition="background-color 0.3s ease"
-                    >
-                      <HStack spacing={4} flex={1}>
-                        <Icon 
-                          as={exp.icon} 
-                          color={exp.color} 
-                          boxSize={10} 
-                          opacity={0.7}
-                        />
-                        <VStack align="start" spacing={1} flex={1}>
-                          <Heading size="md" color={colors.textColor}>
-                            {exp.title}
-                          </Heading>
-                          <Text 
-                            fontSize="sm" 
-                            color={useColorModeValue('gray.600', 'gray.400')}
-                          >
-                            {exp.company} | {exp.location}
-                          </Text>
-                        </VStack>
-                        <Badge 
-                          colorScheme="blue" 
-                          variant="subtle"
-                          transition="all 0.3s ease"
-                          _hover={{
-                            transform: 'scale(1.1)'
-                          }}
-                        >
-                          {exp.period}
-                        </Badge>
-                      </HStack>
-                    </Flex>
- 
-                    {activeExperience === index && (
-                      <Box 
-                        p={4} 
-                        borderTopWidth="1px"
-                        borderTopColor={colors.borderColor}
-                        bg={colors.detailsBgColor}
+                    <Icon as={exp.icon} color={accentColor} w={4} h={4} />
+                  </Circle>
 
-                        transition={{ duration: '0.3s' }}
-                      >
+                  {/* Spacer for Desktop Timeline */}
+                  <Box flex={1} display={{ base: 'none', md: 'block' }} />
+
+                  {/* Content Card */}
+                  <Box
+                    flex={1}
+                    ml={{ base: 12, md: index % 2 === 0 ? 12 : 0 }}
+                    mr={{ base: 0, md: index % 2 === 0 ? 0 : 12 }}
+                  >
+                    <MotionBox
+                      bg={cardBg}
+                      p={6}
+                      borderRadius="2xl"
+                      border="1px solid"
+                      borderColor={borderColor}
+                      boxShadow="sm"
+                      whileHover={{ translateY: -5, boxShadow: 'lg' } as any}
+                      transition={{ duration: 0.3 } as any}
+                    >
+                      <VStack align="stretch" spacing={4}>
+                        <Flex justify="space-between" align="start" wrap="wrap" gap={2}>
+                          <VStack align="start" spacing={1}>
+                            <Heading size="md" fontWeight="bold">
+                              {exp.title}
+                            </Heading>
+                            <HStack color={accentColor} spacing={2}>
+                              <Text fontWeight="600">{exp.company}</Text>
+                              <Text fontSize="xs">•</Text>
+                              <HStack spacing={1} color={mutedColor}>
+                                <Icon as={FaMapMarkerAlt} w={3} h={3} />
+                                <Text fontSize="xs">{exp.location}</Text>
+                              </HStack>
+                            </HStack>
+                          </VStack>
+                          <Badge colorScheme="brand" variant="outline" borderRadius="full" px={3}>
+                            {exp.period}
+                          </Badge>
+                        </Flex>
+
                         <VStack align="stretch" spacing={3}>
-                          {exp.responsibilities.map((responsibility, respIndex) => (
-                            <HStack 
-                              key={respIndex} 
-                              spacing={3} 
-                              align="start"
-                            >
-                              <Icon 
-                                as={FaCode} 
-                                color={exp.color} 
-                                boxSize={4} 
-                                mt={1}
-                                opacity={0.7}
-                              />
-                              <Text 
-                                flex={1}
-                                fontSize="sm"
-                                color={colors.textColor}
-                              >
-                                {responsibility}
+                          {exp.responsibilities.slice(0, activeExperience === index ? undefined : 3).map((resp, i) => (
+                            <HStack key={i} align="start" spacing={3}>
+                              <Icon as={FaCode} color={accentColor} mt={1} w={3} h={3} />
+                              <Text fontSize="sm" color={textColor} lineHeight="tall">
+                                {resp}
                               </Text>
                             </HStack>
                           ))}
-
-                          {exp.technologies && (
-                            <HStack 
-                              spacing={2} 
-                              mt={4} 
-                              flexWrap="wrap"
-                            >
-                              {exp.technologies.map((tech, techIndex) => {
-                                const techIcon = getTechnologyIcon(tech);
-
-                                return (
-                                  <HStack 
-                                    key={techIndex} 
-                                    spacing={1} 
-                                    align="center"
-                                    transition="all 0.3s ease"
-                                    _hover={{
-                                      transform: 'scale(1.1)',
-                                      opacity: 1
-                                    }}
-                                  >
-                                    <Icon 
-                                      as={techIcon} 
-                                      boxSize={4} 
-                                      opacity={0.7}
-                                      color="gray.200"
-                                    />
-                                    <Badge 
-                                      colorScheme="purple" 
-                                      variant="subtle"
-                                    >
-                                      {tech}
-                                    </Badge>
-                                  </HStack>
-                                );
-                              })}
-                            </HStack>
-                          )}
                         </VStack>
-                      </Box>
-                    )}
+
+                        {exp.responsibilities.length > 3 && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setActiveExperience(activeExperience === index ? null : index)}
+                            rightIcon={activeExperience === index ? <FaChevronUp /> : <FaChevronDown />}
+                            alignSelf="flex-start"
+                            fontSize="xs"
+                            color={accentColor}
+                          >
+                            {activeExperience === index ? 'Show Less' : `Show ${exp.responsibilities.length - 3} More Items`}
+                          </Button>
+                        )}
+
+                        {exp.Keywords && (
+                          <Flex wrap="wrap" gap={2} pt={2}>
+                            {exp.Keywords.map((tech, i) => {
+                              const TechIcon = getTechnologyIcon(tech);
+                              return (
+                                <HStack
+                                  key={i}
+                                  bg={useColorModeValue('gray.50', 'whiteAlpha.50')}
+                                  px={2}
+                                  py={1}
+                                  borderRadius="md"
+                                  border="1px solid"
+                                  borderColor={borderColor}
+                                >
+                                  <Icon as={TechIcon} w={3} h={3} color={mutedColor} />
+                                  <Text fontSize="2xs" fontWeight="bold" color={mutedColor}>
+                                    {tech}
+                                  </Text>
+                                </HStack>
+                              );
+                            })}
+                          </Flex>
+                        )}
+                      </VStack>
+                    </MotionBox>
                   </Box>
-                </Box>
-              </Flex>
-            ))}
-          </Box>      </VStack>
-      </Box>
-    </Container>
+                </MotionFlex>
+              ))}
+            </VStack>
+          </Box>
+        </VStack>
+      </Container>
+    </Box>
   );
 };

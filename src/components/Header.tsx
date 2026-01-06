@@ -13,7 +13,7 @@ const Header = () => {
           <Link href="/about">About</Link>
           <Link href="/cv">CV</Link>
           <Link href="/publications">Publications</Link>
-          <Link href="/blog">Blog</Link>
+          <Link href="/b  log">Blog</Link>
         </HStack>
         
         <HStack spacing={4}>
